@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Module 1 : Tableau d'affichage officiel ────────────────────────────────
+// kind : "communique" | "conseil" | "deces" | "naissance" | "mariage" | "diaspora"
+// Le bandeau d'alerte urgente utilise alertActive/alertMessage (activable par l'admin)
+
+model Announcement {
+  id           String   @id @default(cuid())
+  kind         String
+  title        String
+  author       String
+  body         String
+  date         DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// ─── Module 2 : Agenda du village ───────────────────────────────────────────
+// kind : "religieux" | "mariage" | "bapteme" | "assemblee" | "sport" | "sante" | "culture" | "marche"
+
+model Event {
+  id        String    @id @default(cuid())
+  kind      String
+  title     String
+  startAt   DateTime
+  endAt     DateTime?
+  location  String
+  quartier  String
+  family    String
+  notes     String?
+  createdAt DateTime  @default(now())
+}
+
+// ─── Module 3 : Annuaire des contacts utiles ────────────────────────────────
+// category : "urgence" (Urgences & Autorités) | "artisan" (Ouvriers & Artisans) | "habitant" (Habitants & Diaspora)
+
+model Contact {
+  id        String   @id @default(cuid())
+  category  String
+  name      String
+  role      String
+  quartier  String?
+  city      String?
+  phone     String
+  whatsapp  String?
+  note      String?
+  createdAt DateTime @default(now())
+}
+
+// ─── Module 4 : Santé & Transport ───────────────────────────────────────────
+// section : "sante" | "transport" — entrées clé/valeur éditables par l'admin
+
+model HealthTransportInfo {
+  id        String @id @default(cuid())
+  section   String
+  key       String
+  label     String
+  value     String
+  sortOrder Int    @default(0)
+}
+
+// ─── Module 5 : Guide de route Dakar → Diaranguel ───────────────────────────
+
+model RouteStep {
+  id          String  @id @default(cuid())
+  stepNumber  Int
+  landmark    String
+  instruction String
+  distanceKm  Float
+  tip         String?
+}
+
+// ─── Module 6 : Histoire, culture et patrimoine ─────────────────────────────
+// section : "origines" (récit & lieux symboliques) | "figures" (biographies) | "cooperation" (JAD & développement)
+
+model HistoryArticle {
+  id        String  @id @default(cuid())
+  section   String
+  title     String
+  subtitle  String?
+  body      String
+  period    String?
+  image     String?
+  sortOrder Int     @default(0)
+}

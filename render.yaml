@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: diaranguel-jam-tan
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    healthCheckPath: /
+    disk:
+      name: diaranguel-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOSTNAME
+        value: 0.0.0.0
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        value: file:/var/data/custom.db
+      - key: ADMIN_CODE
+        sync: false
+      - key: ADMIN_SECRET
+        sync: false
+      - key: VILLAGE_CODE
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
